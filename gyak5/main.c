@@ -77,4 +77,22 @@ int main()
     // MIN
     // MAX
 
+    //Primszamszamlalos
+    printf("Primek\n");
+    int counter = 0, isPrime;
+    for (int num = start; num < end; num++){
+            isPrime = 1;
+        for (int devider = 2; devider <= sqrt(num); devider++){
+            if (num % devider == 0 || num == 1){
+                isPrime = 0;
+                break;
+            }
+        }
+        if (isPrime){
+            counter++;
+            printf("%d ", num);
+        }
+    }
+    return 0;
+
 }
