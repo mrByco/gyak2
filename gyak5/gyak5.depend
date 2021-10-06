@@ -1,0 +1,5 @@
+# depslib dependency file v1.0
+1633495222 source:c:\users\user\repos\progalap\gyak5\main.c
+	<stdio.h>
+	<stdlib.h>
+
