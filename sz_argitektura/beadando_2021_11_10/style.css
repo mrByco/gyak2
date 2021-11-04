@@ -1,0 +1,29 @@
+body {
+    color: rgb(199, 199, 199);
+    font-family: sans-serif;
+}
+
+p {
+    font-size: 20px;
+    line-height: 1.5;
+}
+
+.title-container {
+    border: 10px solid yellow;
+}
+.title-container h1 {
+    font-size: 58px;
+    line-height: 0;
+}
+
+.center {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    align-items: center;
+}
+
+
+td, tr {
+    text-align: left;
+}
