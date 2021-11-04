@@ -27,3 +27,21 @@ p {
 td, tr {
     text-align: left;
 }
+
+
+.gallery {
+    margin-bottom: 4rem;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+  }
+  
+  div.gallery img:hover {
+      opacity: 0.5;
+  }
+  
+  div.gallery img {
+    width: 20vw;
+    height: auto;
+    transition: opacity 500ms;
+  }
