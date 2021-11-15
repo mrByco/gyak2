@@ -1,0 +1,5 @@
+# depslib dependency file v1.0
+1637013598 source:f:\repos\progalap\secondlevelequasionsolver\main.c
+	<stdio.h>
+	<stdlib.h>
+
