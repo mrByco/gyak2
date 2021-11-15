@@ -1,0 +1,48 @@
+body {
+    color: rgb(199, 199, 199);
+    font-family: sans-serif;
+}
+
+p {
+    color: rgb(148, 148, 148);
+    font-size: 20px;
+    line-height: 1.5;
+}
+
+.title-container {
+    border: 10px solid yellow;
+}
+.title-container h1 {
+    font-size: 58px;
+    line-height: 0;
+}
+
+.center {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    align-items: center;
+}
+
+
+td, tr {
+    text-align: left;
+}
+
+
+.gallery {
+    margin-bottom: 4rem;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+  }
+  
+  div.gallery img:hover {
+      opacity: 0.5;
+  }
+  
+  div.gallery img {
+    width: 20vw;
+    height: auto;
+    transition: opacity 500ms;
+  }

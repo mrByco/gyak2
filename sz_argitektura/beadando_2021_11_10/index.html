@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="hu">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>UTP nem UTP</title>
+  <style>
+    body {
+      color: rgb(228, 228, 228);
+      font-family: sans-serif;
+    }
+
+    p {
+      color: rgb(180, 180, 180);
+      font-size: 20px;
+      line-height: 1.5;
+    }
+
+    .title-container {
+      border: 10px solid yellow;
+    }
+
+    .title-container h1 {
+      font-size: 58px;
+      line-height: 0;
+    }
+
+    .center {
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+      align-items: center;
+    }
+
+
+    td,tr {
+      text-align: left;
+    }
+
+
+    .gallery {
+      margin-bottom: 4rem;
+      display: flex;
+      flex-direction: row;
+      justify-content: space-around;
+    }
+
+    div.gallery img:hover {
+      opacity: 0.5;
+    }
+
+    div.gallery img {
+      width: 20vw;
+      height: auto;
+      transition: opacity 500ms;
+    }
+  </style>
+</head>
+
+<body style="background-color: rgb(0, 0, 25);">
+  <div style="width: 75%; margin: auto">
+    <div class="center">
+      <div class="title-container">
+        <h1 style="color: white;">UTP Kábelek a wifi korában</h1>
+      </div>
+    </div>
+    <p align="justify" style="margin-top: 3rem;">Az Ethernet-alapú rendszerekben az egyik leggyakrabban használt kábel
+      az UTP-kábel, amely a Unshielded Twisted Pair angol szónak a rövidítése. Magyarországon lefordítható árnyékolatlan
+      csavart érpárnak, de itthon szinte senki sem hivatkozik rá így. A feltaláló nem más, mint Bell, a telefon
+      szülőatyja.</p>
+
+    <div style="margin-top: 3rem;">
+      <h3>Az oldal tartalma:</h3>
+      <ul>
+        <li>Mi az a UTP kábel?</li>
+        <li>Cat szabványok</li>
+        <li>UTP mint háttérkép</li>
+      </ul>
+    </div>
+
+    <h2>Mi az UTP kábel?</h3>
+      <div>
+        <p align="justify">Leggyakoribb felhasználása az internet biztosítása különböző eszközökhöz (pl. számítógépek,
+          terminálok, kamerák, stb.), amennyiben wi-fi kapcsolat nem elérhető, vagy nagyobb megbízhatósságot igényel,
+          továbbá a vezetékes telefonok is ilyen módon csatlakoztathatóak. Az előállítási költsége rendkívül alacsony,
+          ezért rendkívül pénztárcabarát megoldásnak számít, ráadásul a csavart vezetékeknek köszönhetően a külső
+          elektromos zajforrásokat is minimalizálja. Ennek a lényege az, hogy a zavaró jelek mindig másik vezetékpáron
+          csapódnak le, ezért kevésbé vannak hatással a jelátvitel minőségére.<br />
+          A vezetékes telefonokhoz jellemzően kettős érpárral rendelkező UTP kábelt alkalmaznak, mivel ez csak hang
+          továbbítására alkalmas. Egy másik fontos tulajdonság a CAT szám, amely 1-7-ig terjedő értéket vehet fel. A
+          2-es mindössze 4Mbit/s sebességgel tud adatokat továbbítani, míg az 5-ös már gigabites hálózatokhoz
+          alkalmatos. Az e feletti értékűek jellemzően már ritkábban fordulnak elő, speciálisabb és gyorsabb
+          infrastruktúrákhoz használatosak.<br />
+          Az UTP kábelek másik csoportosítása aszerint történik, hogy a falban, vagy szabadon kell lógniuk. A falba
+          épített változatok merevebbek, míg a lengőkábel hajlékonyabb.</p>
+      </div>
+
+      <h2>Cat szabványok</h2>
+
+      <div>
+        <p align="justify">Az utp kábelek sebessége nagyban függ az adott kábel cat számától, cat száma nem csak az UTP
+          kábeleknek van. Minden kábelnek van cat száma amit internet továbbítására használnak. A cat az angol category
+          szó rövídítéséből származik.<br />
+        <h3>Cat 3</h3>
+        <p>A cat 3 egy korábbi internet generációhoz volt használatos azomban egyes régebbi helyeken még mindig
+          megfigyelhető a gyakorlatban. A maximum támogatott frekvenciája 16 MHz ami még mindig használatban van 2
+          vonalas telefonoknál, és 10BASE-T hálózatokon. A cat 3 riasztó rendszerekben vagy hasonló alkalmazásokban is
+          használatos. Ennek a kábel típusnak 2, 3 vagy 4 érpárja van. Manapjás inkább a cat5e típus az általános
+          indernet hálózatok esetén.</p>
+        <h3>Cat 5</h3>
+        <p>
+          A cat5 ethernet bevezette a 10/100 Mbps sebességet akár 100 méter távolságon is. Gyors ethernetként is ismert.
+          Bár néhány régebbi rendszer még mindig ezt használja, ma már régi és nem praktikus technológiának számít.
+        </p>
+        <h3>Cat 5e</h3>
+        <p>
+          Bár a cat5 és a cat5e kábelek megjelnésükben hasonlóak, a Cat 5e ethernet sokkal szigórúbb IEEE szabványokat
+          követ. A nevében lévő "E" az enhanced angol szóra utal aminek a jelentése fokozott, ez a kábel fokozott
+          teljesítményére, nagyobb zajtoleranciájára utal, és arra hogy az inferencia mértéke is kissebb ennél a
+          kábelnél. <br />
+          A Cat5e a legelterjettebb típus a mostani rendszereknél mivel támogatja a Gigabites sebességet,
+          költséghetékony módon. Bár a Cat5 és a Cat5e maximum frekvenciája egyformat (maximum 100MHz) a Cat5e teljesen
+          leváltotta elődjét. A Gigabites eternet 4 adatpárt használ, a gyors Ethernet csak 2-t.<br />
+          Amellett hogy a Cat 5e támogatja az 1000 Mbps sebességet, elég flexibilis hogy kis helyen otthoni környezetben
+          is használható legyen, viszont ipari területen is használják olcsósága miatt. Az összes kábelezési opció küzül
+          ma a Cat 5e a legolcsóbb megoldás. A maximum távolsága az Cat 5e-nek is 100m
+        </p>
+        <h3>Cat 6</h3>
+        <p>
+          A Cat6 10 Gbps sebességet támogat 250 Mhz frekvenciát használva. Míg a Cat 5e kábelek 1,5-2 ször tekerednek
+          körbe centiméterenként addig a Cat 6 kábelek tekerése 2 vagy több csavarodást igényel per cm. <br />
+          A Cat6 kábelek maximális távolsága 100m azomban az optimális sebesség elérését csak 37-55 mételen támogatja
+          (zajszinttől függően).
+        </p>
+        <h3>Cat 6a</h3>
+        <p>
+          A Cat 6a támogatja a 500Mhz átviteli frekvenciát ami duplája a Cat6 kábelének. A sebessége szintén max. 10
+          Mbps mint az elődjének. De itt már elérhető a 100 méteres távolság maximum sebességen. A Cat 6e érpárjai
+          árnyékoltak ami növeli a zaj-jel arányt. A kábel konstrukció nem enged akkora flexibilitást mint a korábbi
+          kábel szabványok ezért inkább ipari használatra alkalmas.
+        </p>
+        <h3>Cat 7</h3>
+        <p>
+          A Cat7 szintén 10 Gbps sebességet támogat azomban labortesztek azt mutatják hogy képes a 40 Gbps sebességre 50
+          méteren, és akár 100 Gbps-re 15 méteren. A Cat7-nek jóval masszívabb az árnyékolása ami még tobább csökkenti a
+          zaj hatását. Az egyes érpárok külön-külön is árnyokáltak ami új szintre csökkenti a zajszintet. Cat7
+          különleges GigaGate45 (GG45) csatlakozót igényel hogy kihasználhassuk a szabvány jújtotta előnyoket. <br />
+          A Cat 7 leginkább adatközbontokban, és nagyvállalati környezetben használható.
+        </p>
+        <h3>Cat 8</h3>
+        <p>A Cat 8 kábel még fejlesztési fázisban van. A fejlesztők tervei szerint 25 Gbps és 40 Gbps internetet fog
+          támogatni. A szabvány még ennél is nagyobb sebességet fog támogatni 30 méteren vagy alatta.</p>
+      </div>
+
+      <div>
+        <div class="center">
+          <h3>HTML kábelek árazása</h3>
+          <table style="width:450px">
+            <tr>
+              <th>Bolt</th>
+              <th>Márka</th>
+              <th>Hossz</th>
+              <th>Ár</th>
+              <th>Link</th>
+            </tr>
+            <tr>
+              <td>Emag</td>
+              <td>Equip</td>
+              <td>10m</td>
+              <td>1690 Ft</td>
+              <td><a
+                  href="https://www.emag.hu/equip-halozati-kabel-u-utp-c6-10-m-szurke-625416/pd/DN1QF1BBM/?cmpid=92386&gclid=CjwKCAjwiY6MBhBqEiwARFSCPoxyFsN-IW4S_Bcac4PVZRCxaHxgbk6MikDoWu5TX1V9yEJjB3al0xoCR20QAvD_BwE">Vásárlás
+                  most</a></td>
+            </tr>
+            <tr>
+              <td>Ixen</td>
+              <td>-</td>
+              <td>15m</td>
+              <td>990 Ft</td>
+              <td><a href="https://ixen.hu/halozati-lan-kabel-15m">Vásárlás most</a></td>
+            </tr>
+            <tr>
+              <td>Ixen</td>
+              <td>-</td>
+              <td>20m</td>
+              <td>2990 Ft</td>
+              <td><a
+                  href="https://ixen.hu/halozati-lan-kabel-20m?gclid=CjwKCAjwiY6MBhBqEiwARFSCPifowhguI8KGE_EQS9QGtiuvuUA9ocsyTy-iEQ8g8Hpi97XSvGusAxoCQkcQAvD_BwE">Vásárlás
+                  most</a></td>
+            </tr>
+          </table>
+        </div>
+      </div>
+
+      <div>
+        <div class="center">
+          <h3>UTP mint háttérkép</h3>
+
+        </div>
+      </div>
+
+
+      <div class="gallery">
+        <a target="_blank" href="utp1.jpg">
+          <img src="utp1.jpg">
+        </a>
+        <a target="_blank" href="utp2.jpg">
+          <img src="utp2.jpg">
+        </a>
+        <a target="_blank" href="utp3.jpg">
+          <img src="utp3.jpg">
+        </a>
+        <a target="_blank" href="utp4.jpg">
+          <img src="utp4.jpg">
+        </a>
+      </div>
+
+      <h3 style="text-decoration: underline;">Források</h3>
+      <ul>
+        <li><a
+            href="https://planetechusa.com/demystifying-ethernet-types-difference-between-cat5e-cat-6-and-cat7/">szerző(k): Demystifying Ethernet Types —Difference between Cat5e, Cat 6, and Cat7</a>
+        </li>
+        <li><a
+            href="http://hu.opticalpatchcable.com/news/cat5e-vs-cat6-cable-which-do-you-choose-37558348.html">szerző(k): Cat5e Vs Cat6 kábel - melyiket választja? - Hírek - Focc Technology Co., Ltd.</a>
+        </li>
+        <li><a href="https://tudashalmaz.hu/muszaki/utp-kabel/">szerző(k): Mire való az UTP kábel? - TudásHalmaz</a>
+        </li>
+      </ul>
+
+
+
+
+</body>
+
+</html>
