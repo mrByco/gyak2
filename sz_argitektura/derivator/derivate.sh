@@ -20,11 +20,18 @@ IsSingleDerivable(){
 
 DerivateSingle() {
   # Executes a single non composite subderivation
-  if (($1 <= 1)); then
-    echo 1
+
+  # x^5, x^5342, x^-234234
+  if [[ $1 =~ ^([a-z]\^-*[0-9]+)$ ]]; then
+      exponent=$(echo $1 | grep -oP "\-*[0-9]+")
+      if [[ $exponent == 2 ]]; then
+        echo "2x"
+      else
+        # shellcheck disable=SC2140
+        echo "$exponent"x^"$(("$exponent"-1))"
+      fi
   else
-    last=$(derivate_single $(($1 - 1)))
-    echo $(($1 * last))
+      echo "Not implemented"
   fi
 }
 
@@ -36,11 +43,7 @@ DerivateComplex(){
 }
 
 DerivationLoop(){
-  echo $1
-  #if [ IsSingleDerivable ]
-  #then
-  #  return DerivateSingle
-  #fi
+  DerivateSingle $1
 }
 
 while getopts ':h' option; do
