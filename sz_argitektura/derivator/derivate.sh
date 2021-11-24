@@ -10,14 +10,6 @@ Help() {
   echo
 }
 
-IsSingleDerivable(){
-  # RegExes to decide if it is a single derivable
-  # $1 should be the value to derivate
-  echo ""
-  echo ""
-  return 0
-}
-
 DerivateSingle() {
   # Executes a single non composite subderivation
 
