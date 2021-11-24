@@ -36,10 +36,11 @@ DerivateComplex(){
 }
 
 DerivationLoop(){
-  if [ IsSingleDerivable ]
-  then
-    return DerivateSingle
-  fi
+  echo $1
+  #if [ IsSingleDerivable ]
+  #then
+  #  return DerivateSingle
+  #fi
 }
 
 while getopts ':h' option; do
@@ -56,7 +57,6 @@ while getopts ':h' option; do
   esac
 done
 
-
-echo $((2 + 5))
-
+result=$(DerivationLoop $1)
+echo "Result: " $result
 read
