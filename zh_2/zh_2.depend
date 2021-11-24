@@ -1,0 +1,6 @@
+# depslib dependency file v1.0
+1637705026 source:f:\repos\progalap\zh_2\main.c
+	<stdio.h>
+	<stdlib.h>
+	<time.h>
+
