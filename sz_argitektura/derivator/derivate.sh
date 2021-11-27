@@ -11,6 +11,7 @@ Help() {
 }
 
 
+
 # Extracts params of a -4sin(x) or any other function to prefix, prefix_negative, and inner content
 # $1 should be the expression, $2 the name of the function
 ExtractParams(){
@@ -26,11 +27,52 @@ ExtractParams(){
   export inner_expr
 }
 
-IsAddedComposite(){
-  PrantechesLevel=0
-  ExponentLevel=0
+GetDeriationType(){
+  
+  expr=$1
+  Pranteches=0
+  Exponent=0
+
   for (( i=0; i<${#1}; i++ )); do
-    echo "${1:$i:1}"
+    if [ "${expr:$i:1}" = "(" ]; then
+      Pranteches=$(($Pranteches+1))
+    elif [ "${expr:$i:1}" = ")" ]; then
+      Pranteches=$(($Pranteches-1))
+    elif [ "${expr:$i:1}" = "^" ]; then
+      Exponent=$(($Exponent+1))
+    fi
+
+    if [[ "${expr:$i:1}" =~ [-\/\+\)\×] ]] && [ $Exponent -gt 0 ] ; then
+      LastCheckCause="m"
+      if [ "${expr:$i:1}" = ")" ]; then
+         LastCheckCause=")"
+      fi
+      RawExponent=1
+      TrackBackPrantCount=$Pranteches
+      TrackBackExponentCount=$Exponent
+
+      for (( j=$i; j>0; j-- )); do
+
+        if [[ "${expr:$j:1}" =~ [-\/\+\)\×] ]] && [ $j -lt $i ]; then
+          RawExponent=0
+        fi
+
+        if [ "${expr:$j:1}" = "(" ]; then
+          TrackBackPrantCount=$(($TrackBackPrantCount-1))
+          RawExponent=0
+        elif [ "${expr:$j:1}" = ")" ]; then
+          TrackBackPrantCount=$(($TrackBackPrantCount+1))
+        elif [ "${expr:$j:1}" = "^" ] && [ ${expr:$(($j+1)):1} = "(" ] && [ $TrackBackPrantCount = $Pranteches ]; then
+          echo "D"
+          RawExponent=1
+          Exponent=$(($Exponent-1))
+        elif [ $RawExponent -eq 1 ] && [ "${expr:$j:1}" = "^" ]; then
+          echo "D"
+          Exponent=$(($Exponent-1))
+        fi
+      done
+    fi
+    echo ${expr:$i:1}
   done
   
   echo 0
@@ -175,9 +217,9 @@ DerivateComplex(){
 DerivationLoop(){
   # x^x+1
   # 4func(x+1)
-  #IsAddedComposite $1
+  GetDeriationType $1
   
-  DerivateSingle $1
+  #DerivateSingle $1
 }
 
 while getopts ':h' option; do
