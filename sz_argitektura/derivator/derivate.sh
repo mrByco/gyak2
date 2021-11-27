@@ -26,6 +26,16 @@ ExtractParams(){
   export inner_expr
 }
 
+IsAddedComposite(){
+  PrantechesLevel=0
+  ExponentLevel=0
+  for (( i=0; i<${#1}; i++ )); do
+    echo "${1:$i:1}"
+  done
+  
+  echo 0
+}
+
 DerivateSingle() {
   # Executes a single non composite subderivation oiasjdolkajsdlk
 
@@ -51,25 +61,21 @@ DerivateSingle() {
         ExtractParams $1 sin
         echo "$(($prefix*$prefix_negative))cos$inner_expr"
         
-
   # COS
   elif [[ $1 =~ ^(-?([0-9]*))?cos\(.+\)$ ]]; then
         ExtractParams $1 cos
         echo "$(($prefix*$prefix_negative*-1))sin$inner_expr"
 
-  
-  # tan(x), tan(x + 54/x) tan(blablabla)
+  # TAN
   elif [[ $1 =~ ^(-?([0-9]*))?tan\(.+\)$ ]]; then
         ExtractParams $1 tan
         echo "$(($prefix*$prefix_negative))/(cos$inner_expr^2)"
 
-  # cot(x), cot(x + 54/x) cot(blablabla)
+  # COT
   elif [[ $1 =~ ^(-?([0-9]*))?cot\(.+\)$ ]]; then
         ExtractParams $1 cot
         echo "$(($prefix*$prefix_negative*-1))/(sin$inner_expr^2)"
 
-
-  
   # ARCSIN
   elif [[ $1 =~ ^(-?([0-9]*))?arcsin\(.+\)$ ]]; then
         ExtractParams $1 arcsin
@@ -79,25 +85,56 @@ DerivateSingle() {
   elif [[ $1 =~ ^(-?([0-9]*))?arccos\(.+\)$ ]]; then
         ExtractParams $1 arccos
         echo "$(($prefix*$prefix_negative*-1))/root(2,1-$inner_expr^2)"
-  # ARCTG
+        
+  # ARCTAN
   elif [[ $1 =~ ^(-?([0-9]*))?arctan\(.+\)$ ]]; then
         ExtractParams $1 arctan
-        echo "$(($prefix*$prefix_negative*))/1+$inner_expr^2"
+        echo "$(($prefix*$prefix_negative))/1+$inner_expr^2"
+
   # ARCCOT
   elif [[ $1 =~ ^(-?([0-9]*))?arccot\(.+\)$ ]]; then
         ExtractParams $1 arccot
         echo "$(($prefix*$prefix_negative*-1))/1+$inner_expr^2"
-
 
 # SINH
   elif [[ $1 =~ ^(-?([0-9]*))?sinh\(.+\)$ ]]; then
         ExtractParams $1 sinh
         echo "$(($prefix*$prefix_negative))cosh$inner_expr"
 
-        
+# COSH
+  elif [[ $1 =~ ^(-?([0-9]*))?cosh\(.+\)$ ]]; then
+        ExtractParams $1 cosh
+        echo "$(($prefix*$prefix_negative))sinh$inner_expr"  
 
-
+# TANH
+  elif [[ $1 =~ ^(-?([0-9]*))?tanh\(.+\)$ ]]; then
+        ExtractParams $1 tanh
+        echo "$(($prefix*$prefix_negative))/(cosh$inner_expr^2)"
         
+# COTH
+  elif [[ $1 =~ ^(-?([0-9]*))?coth\(.+\)$ ]]; then
+        ExtractParams $1 coth
+        echo "$(($prefix*$prefix_negative*-1))/(sinh$inner_expr^2)"
+
+# ARSINH
+  elif [[ $1 =~ ^(-?([0-9]*))?arsinh\(.+\)$ ]]; then
+        ExtractParams $1 arsinh
+        echo "$(($prefix*$prefix_negative))/root(2,($inner_expr^2)+1)"
+
+# ARCOSH
+  elif [[ $1 =~ ^(-?([0-9]*))?arcosh\(.+\)$ ]]; then
+        ExtractParams $1 arcosh
+        echo "$(($prefix*$prefix_negative))/root(2,($inner_expr^2)-1)"
+
+# ARTANH
+  elif [[ $1 =~ ^(-?([0-9]*))?artanh\(.+\)$ ]]; then
+        ExtractParams $1 artanh
+        echo "$(($prefix*$prefix_negative))/1-$inner_expr^2"
+
+# ARCOTH
+  elif [[ $1 =~ ^(-?([0-9]*))?arcoth\(.+\)$ ]]; then
+        ExtractParams $1 arcoth
+        echo "$(($prefix*$prefix_negative))/1-$inner_expr^2"
 
 
   # log(a,x)
@@ -136,6 +173,10 @@ DerivateComplex(){
 }
 
 DerivationLoop(){
+  # x^x+1
+  # 4func(x+1)
+  #IsAddedComposite $1
+  
   DerivateSingle $1
 }
 
