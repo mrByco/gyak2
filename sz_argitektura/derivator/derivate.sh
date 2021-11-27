@@ -28,10 +28,11 @@ ExtractParams(){
 }
 
 GetDeriationType(){
-  
   expr=$1
   Pranteches=0
   Exponent=0
+  # 5: +- 3: / 2: × 1: chain
+  ExprType=1
 
   for (( i=0; i<${#1}; i++ )); do
     if [ "${expr:$i:1}" = "(" ]; then
@@ -43,10 +44,6 @@ GetDeriationType(){
     fi
 
     if [[ "${expr:$i:1}" =~ [-\/\+\)\×] ]] && [ $Exponent -gt 0 ] ; then
-      LastCheckCause="m"
-      if [ "${expr:$i:1}" = ")" ]; then
-         LastCheckCause=")"
-      fi
       RawExponent=1
       TrackBackPrantCount=$Pranteches
       TrackBackExponentCount=$Exponent
@@ -56,26 +53,37 @@ GetDeriationType(){
         if [[ "${expr:$j:1}" =~ [-\/\+\)\×] ]] && [ $j -lt $i ]; then
           RawExponent=0
         fi
-
         if [ "${expr:$j:1}" = "(" ]; then
           TrackBackPrantCount=$(($TrackBackPrantCount-1))
           RawExponent=0
         elif [ "${expr:$j:1}" = ")" ]; then
           TrackBackPrantCount=$(($TrackBackPrantCount+1))
         elif [ "${expr:$j:1}" = "^" ] && [ ${expr:$(($j+1)):1} = "(" ] && [ $TrackBackPrantCount = $Pranteches ]; then
-          echo "D"
           RawExponent=1
           Exponent=$(($Exponent-1))
         elif [ $RawExponent -eq 1 ] && [ "${expr:$j:1}" = "^" ]; then
-          echo "D"
           Exponent=$(($Exponent-1))
         fi
+        if [ $Exponent -eq 0 ]; then
+          break
+        fi
       done
+      
     fi
-    echo ${expr:$i:1}
+    # echo "${expr:$i:1}"
+
+    if [ $Exponent = 0 ] && [ $Pranteches = 0 ]; then
+      if [[ ${expr:$i:1} = [-+] ]]; then
+        ExprType=$(($ExprType>5 ? $ExprType : 5))
+      elif [[ ${expr:$i:1} = [\/] ]]; then
+        ExprType=$(($ExprType>3 ? $ExprType : 3))
+      elif [[ ${expr:$i:1} = [\*] ]]; then
+        ExprType=$(($ExprType>2 ? $ExprType : 2))
+      fi
+    fi
   done
   
-  echo 0
+  echo $ExprType
 }
 
 DerivateSingle() {
@@ -217,7 +225,19 @@ DerivateComplex(){
 DerivationLoop(){
   # x^x+1
   # 4func(x+1)
-  GetDeriationType $1
+  type=$(GetDeriationType $1)
+
+  if [ $type -eq 5 ]; then
+    type="add/sub"
+  elif [ $type -eq 3 ]; then
+    type="div"
+  elif [ $type -eq 2 ]; then
+    type="multiply"
+  elif [ $type -eq 1 ]; then
+    type="chain"
+  fi
+  
+  echo $type
   
   #DerivateSingle $1
 }
