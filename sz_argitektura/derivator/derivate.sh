@@ -10,31 +10,8 @@ Help() {
   echo
 }
 
-
-
-# Extracts params of a -4sin(x) or any other function to prefix, prefix_negative, and inner content
-# $1 should be the expression, $2 the name of the function
-ExtractParams(){
-  prefix=$(echo $1 | (grep -oP "(-)?[0-9]+$2" || echo 1) | grep -oP "[0-9]+")
-  if [[ $1 =~ ^-[0-9]*.*$ ]]; then
-    prefix_negative=-1
-  else
-    prefix_negative=1
-  fi
-  inner_expr=$(echo $1 | grep -oP "^(-?([0-9]*))?$2\(.+\)$" | grep -oP "\((.*)\)")
-  export prefix
-  export prefix_negative
-  export inner_expr
-}
-
-GetDeriationType(){
-  expr=$1
-  Pranteches=0
-  Exponent=0
-  # 5: +- 3: / 2: × 1: chain
-  ExprType=1
-
-  for (( i=0; i<${#1}; i++ )); do
+DoExpressionAnalizerLoop() {
+  
     if [ "${expr:$i:1}" = "(" ]; then
       Pranteches=$(($Pranteches+1))
     elif [ "${expr:$i:1}" = ")" ]; then
@@ -70,6 +47,32 @@ GetDeriationType(){
       done
       
     fi
+}
+
+# Extracts params of a -4sin(x) or any other function to prefix, prefix_negative, and inner content
+# $1 should be the expression, $2 the name of the function
+ExtractParams(){
+  prefix=$(echo $1 | (grep -oP "(-)?[0-9]+$2" || echo 1) | grep -oP "[0-9]+")
+  if [[ $1 =~ ^-[0-9]*.*$ ]]; then
+    prefix_negative=-1
+  else
+    prefix_negative=1
+  fi
+  inner_expr=$(echo $1 | grep -oP "^(-?([0-9]*))?$2\(.+\)$" | grep -oP "\((.*)\)")
+  export prefix
+  export prefix_negative
+  export inner_expr
+}
+
+GetDeriationType(){
+  expr=$1
+  Pranteches=0
+  Exponent=0
+  # 5: +- 3: / 2: × 1: chain
+  ExprType=1
+
+  for (( i=0; i<${#1}; i++ )); do
+    DoExpressionAnalizerLoop
     # echo "${expr:$i:1}"
 
     if [ $Exponent = 0 ] && [ $Pranteches = 0 ]; then
