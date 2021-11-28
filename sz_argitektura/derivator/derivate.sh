@@ -68,8 +68,17 @@ GetDeriationType(){
   expr=$1
   Pranteches=0
   Exponent=0
-  # 5: +- 3: / 2: × 1: chain
-  ExprType=1
+
+  addSubtractSegments=()
+  multiplySegments=()
+  divisionSegments=()
+
+  chainContent=''
+
+  lastChar='none'
+
+  # 5: +- 3: / 2: × 1: chain 0: simple
+  type=0
 
   for (( i=0; i<${#1}; i++ )); do
     DoExpressionAnalizerLoop
@@ -77,16 +86,77 @@ GetDeriationType(){
 
     if [ $Exponent = 0 ] && [ $Pranteches = 0 ]; then
       if [[ ${expr:$i:1} = [-+] ]]; then
-        ExprType=$(($ExprType>5 ? $ExprType : 5))
+        type=$(($type>5 ? $type : 5))
       elif [[ ${expr:$i:1} = [\/] ]]; then
-        ExprType=$(($ExprType>3 ? $ExprType : 3))
+        type=$(($type>3 ? $type : 3))
       elif [[ ${expr:$i:1} = [\*] ]]; then
-        ExprType=$(($ExprType>2 ? $ExprType : 2))
+        type=$(($type>2 ? $type : 2))
       fi
     fi
+
+    RED='\033[0;31m'
+    NC='\033[0m'
+    
+    if [ $Pranteches -eq 0 ] && [ $Exponent -eq 0 ]  && ! [[ ${expr:$i:1} =~ [-\/\+\×] ]]; then
+      if [ $lastChar == "+" ]; then
+          addSubtractSegments+=(${expr:$i:1})
+          # printf ${RED}$lastChar
+      elif [ $lastChar == "-" ]; then
+          addSubtractSegments+=(-${expr:$i:1})
+          # printf ${RED}$lastChar
+      elif [ $lastChar == "*" ]; then
+          printf ${RED}$lastChar
+      elif [ $lastChar == "/" ]; then
+          printf ${RED}$lastChar
+      else
+          lastIndex=$((${#addSubtractSegments[@]}-1))
+          if [ $lastIndex -eq -1 ];then
+            lastIndex=0 
+          fi
+          # printf ${RED}$lastIndex
+          addSubtractSegments[$lastIndex]="${addSubtractSegments[$lastIndex]}${expr:$i:1}"
+          # printf ${NC}$lastChar
+      fi
+    elif ! [[ ${expr:$i:1} =~ [-\/\+\×] ]]; then
+      lastIndex=$((${#addSubtractSegments[@]}-1))
+      if [ $lastIndex -eq -1 ]; then
+        lastIndex=0 
+      fi
+      
+      # printf ${RED}$lastIndex
+      addSubtractSegments[$lastIndex]="${addSubtractSegments[$lastIndex]}${expr:$i:1}"
+      # printf ${NC}$lastChar
+    fi
+
+    lastChar=${expr:$i:1}
+
   done
+  # printf ${NC}$lastChar
+
+  # for element in ${addSubtractSegments[@]}; do
+  #   echo $element
+  # done
   
-  echo $ExprType
+  # Pranteches=0
+  # Exponent=0
+  # lastChar='none'
+  # for (( i=0; i<${#1}; i++ )); do
+  #   DoExpressionAnalizerLoop
+    
+    
+    
+
+  #   lastChar=${expr:$i:1}
+  # done
+
+
+  export addSubtractSegments
+  export multiplySegments
+  export divisionSegments
+
+  export chainContent
+
+  export type
 }
 
 DerivateSingle() {
@@ -101,7 +171,6 @@ DerivateSingle() {
             prefix_negative=1
         fi
         exponent=$(echo $1 | grep -oP "\^(-)?[0-9]*" | grep -oP "(-)?[0-9]*")
-        echo $prefix_negative
         if [[ $exponent == 2 ]]; then
           echo "$(($prefix_negative*$prefix*$exponent))"x
         else
@@ -228,19 +297,29 @@ DerivateComplex(){
 DerivationLoop(){
   # x^x+1
   # 4func(x+1)
-  type=$(GetDeriationType $1)
-
+  GetDeriationType $1
   if [ $type -eq 5 ]; then
     type="add/sub"
+    first=1
+    for element in ${addSubtractSegments[@]}; do
+      if [ $first -eq 0 ];then 
+        printf +
+      fi
+      printf "$(DerivationLoop $element)"
+      first=0
+    done
   elif [ $type -eq 3 ]; then
     type="div"
   elif [ $type -eq 2 ]; then
     type="multiply"
   elif [ $type -eq 1 ]; then
     type="chain"
+  elif [ $type -eq 0 ]; then
+    type="single"
+    echo $(DerivateSingle $1)
   fi
-  
-  echo $type
+  # echo $type
+
   
   #DerivateSingle $1
 }
@@ -255,4 +334,5 @@ while getopts ':h' option; do
 done
 
 result=$(DerivationLoop $1)
+# result=$(DerivateSingle $1)
 echo "Result: " $result

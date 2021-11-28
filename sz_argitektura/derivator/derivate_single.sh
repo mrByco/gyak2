@@ -1,27 +1,11 @@
 #!/bin/bash
-usage="$(basename "$0") [-h] [-s n] -- program to calculate the answer to life, the universe and everything
 
-where:
-    -h  show this help text
-    -s  set the seed value (default: 42)"
+# arrays
 
-seed=42
-echo $((OPTIND))
-while getopts ':hs:' option; do
-  case "$option" in
-    h) echo "$usage"
-       exit
-       ;;
-    s) seed=$OPTARG
-       ;;
-    :) printf "missing argument for -%s\n" "$OPTARG" >&2
-       echo "$usage" >&2
-       exit 1
-       ;;
-   \?) printf "illegal option: -%s\n" "$OPTARG" >&2
-       echo "$usage" >&2
-       exit 1
-       ;;
-  esac
+array=('a' 'b' '')
+
+array[4653]+='hello'
+
+for element in ${array[@]}; do
+  echo $element
 done
-shift $((OPTIND - 1))
