@@ -1,5 +1,9 @@
 #!/bin/bash
 
+
+RED='\033[0;31m'
+NC='\033[0m'
+
 DoExpressionAnalizerLoop() {
     
     if [ "${expr:$i:1}" = "(" ]; then
@@ -40,11 +44,11 @@ DoExpressionAnalizerLoop() {
     fi
     
     # if [ $Pranteches -eq 0 ] && [ $Exponent -eq 0 ]; then #  &&  ]
-    #   printf ${RED}"${expr:$i:1}"
+    #   printf -- ${RED}"${expr:$i:1}"
     # else
-    #   printf ${NC}"${expr:$i:1}"
+    #   printf -- ${NC}"${expr:$i:1}"
     # fi
-    # printf ${NC}
+    # printf -- ${NC}
 }
 
 AppendToLast() {
@@ -69,7 +73,7 @@ AnalizeExpression(){
     chainState=0
     
     lastChar='none'
-    # 
+    #
     # 4: +- 5: / 2: × 1: chain 0: simple
     type=0
     
@@ -151,7 +155,7 @@ AnalizeExpression(){
     done
     # printf "cc($chainContent)"
     
-    # for element in ${addSubtractSegments[@]}; do
+    # for element in ${multiplySegments[@]}; do
     #   echo " $element"
     # done
     
@@ -174,8 +178,7 @@ AnalizeExpression(){
 }
 
 DerivateComplex(){
-    # x^x+1
-    # 4func(x+1)
+    
     AnalizeExpression "$1"
     
     # echo "derivating: $1, type: $type"
@@ -194,11 +197,21 @@ DerivateComplex(){
         type="div"
         elif [ $type -eq 2 ]; then
         
-        # for i in ${! multiplySegments[@]};
-        #   for element in ${multiplySegments[@]};
-        #     printf -- "$(DerivateComplex $element)"
-        #   done
-        # done
+        for i in ${!multiplySegments[@]}; do
+            if [ $i -ne 0 ]; then
+                printf -- "+"
+            fi
+            for j in ${!multiplySegments[@]}; do
+                if [ $j -ne 0 ] && [ "$j" -lt "$((${#multiplySegments[@]}))" ]; then
+                    printf -- "*"
+                fi
+                if [ $i -eq $j ]; then
+                    printf -- "$(./derivate_complex.sh ${multiplySegments[$j]})"
+                else
+                    printf -- "${multiplySegments[$j]}"
+                fi
+            done
+        done
         type="multiply"
         elif [ $type -eq 1 ]; then
         if [[ $chainContent =~ ^-?[0-9]*$ ]] || [[ $chainContent =~ ^x$ ]]; then
