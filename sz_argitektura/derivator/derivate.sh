@@ -1,5 +1,9 @@
 #!/bin/bash
 
+
+RED='\033[0;31m'
+NC='\033[0m'
+
 Help() {
   # Display Help
   echo "Description for the derivation function in bash script"
@@ -20,14 +24,15 @@ DoExpressionAnalizerLoop() {
       Exponent=$(($Exponent+1))
     fi
 
-    if [[ "${expr:$i:1}" =~ [-\/\+\)\×] ]] && [ $Exponent -gt 0 ] ; then
+    if [[ "${expr:$i:1}" =~ [-\/\+\)\*] ]] && [ $Exponent -gt 0 ] ; then
       RawExponent=1
       TrackBackPrantCount=$Pranteches
       TrackBackExponentCount=$Exponent
+      
 
       for (( j=$i; j>0; j-- )); do
 
-        if [[ "${expr:$j:1}" =~ [-\/\+\)\×] ]] && [ $j -lt $i ]; then
+        if [[ "${expr:$j:1}" =~ [-\/\+\)\*] ]] && [ $j -lt $i ]; then
           RawExponent=0
         fi
         if [ "${expr:$j:1}" = "(" ]; then
@@ -47,6 +52,22 @@ DoExpressionAnalizerLoop() {
       done
       
     fi
+  
+      # if [ $Exponent = 0 ] && [ $Pranteches = 0 ]; then
+      #   printf ${RED}"${expr:$i:1}"
+      # else
+      #   printf ${NC}"${expr:$i:1}"
+      # fi
+      # printf ${NC}
+}
+
+AppendToLast() {
+  local -n arr=$1
+  lastIndex=$((${#arr[@]}-1))
+  if [ $lastIndex -eq -1 ];then
+    lastIndex=0 
+  fi
+  arr[$lastIndex]="${arr[$lastIndex]}$2"
 }
 
 # Extracts params of a -4sin(x) or any other function to prefix, prefix_negative, and inner content
@@ -77,78 +98,86 @@ GetDeriationType(){
 
   lastChar='none'
 
-  # 5: +- 3: / 2: × 1: chain 0: simple
+  # 4: +- 5: / 2: × 1: chain 0: simple
   type=0
 
   for (( i=0; i<${#1}; i++ )); do
     DoExpressionAnalizerLoop
-    # echo "${expr:$i:1}"
+
 
     if [ $Exponent = 0 ] && [ $Pranteches = 0 ]; then
-      if [[ ${expr:$i:1} = [-+] ]]; then
-        type=$(($type>5 ? $type : 5))
+      if [[ ${expr:$i:1} = [+] ]]; then
+        type=$(($type>4 ? $type : 4))
+      elif [[ ${expr:$i:1} = [-] ]] && [ $i -ne 0 ]; then
+        type=$(($type>4 ? $type : 4))
       elif [[ ${expr:$i:1} = [\/] ]]; then
-        type=$(($type>3 ? $type : 3))
+        type=$(($type>5 ? $type : 5))
       elif [[ ${expr:$i:1} = [\*] ]]; then
         type=$(($type>2 ? $type : 2))
       fi
     fi
 
-    RED='\033[0;31m'
-    NC='\033[0m'
     
-    if [ $Pranteches -eq 0 ] && [ $Exponent -eq 0 ]  && ! [[ ${expr:$i:1} =~ [-\/\+\×] ]]; then
-      if [ $lastChar == "+" ]; then
-          addSubtractSegments+=(${expr:$i:1})
-          # printf ${RED}$lastChar
-      elif [ $lastChar == "-" ]; then
-          addSubtractSegments+=(-${expr:$i:1})
-          # printf ${RED}$lastChar
-      elif [ $lastChar == "*" ]; then
-          printf ${RED}$lastChar
-      elif [ $lastChar == "/" ]; then
-          printf ${RED}$lastChar
-      else
-          lastIndex=$((${#addSubtractSegments[@]}-1))
-          if [ $lastIndex -eq -1 ];then
-            lastIndex=0 
-          fi
-          # printf ${RED}$lastIndex
-          addSubtractSegments[$lastIndex]="${addSubtractSegments[$lastIndex]}${expr:$i:1}"
-          # printf ${NC}$lastChar
-      fi
-    elif ! [[ ${expr:$i:1} =~ [-\/\+\×] ]]; then
-      lastIndex=$((${#addSubtractSegments[@]}-1))
-      if [ $lastIndex -eq -1 ]; then
-        lastIndex=0 
-      fi
+    if [ $Pranteches -eq 0 ] && [ $Exponent -eq 0 ]  && ! [[ ${expr:$i:1} =~ [-\/\+\*] ]]; then
+    
       
-      # printf ${RED}$lastIndex
-      addSubtractSegments[$lastIndex]="${addSubtractSegments[$lastIndex]}${expr:$i:1}"
-      # printf ${NC}$lastChar
-    fi
+      if [ "$lastChar" == "+" ]; then
+          addSubtractSegments+=(${expr:$i:1})
+          
+          AppendToLast divisionSegments +${expr:$i:1}
+          AppendToLast multiplySegments +${expr:$i:1}
 
+          # printf ${RED}$lastChar
+      elif [ "$lastChar" == "-" ]; then
+          addSubtractSegments+=(-${expr:$i:1})
+          
+          AppendToLast divisionSegments -${expr:$i:1}
+          AppendToLast multiplySegments -${expr:$i:1}
+          
+          # printf ${RED}$lastChar
+      elif [ "$lastChar" == "*" ]; then
+          multiplySegments+=(${expr:$i:1})
+
+          AppendToLast addSubtractSegments *${expr:$i:1}
+          AppendToLast divisionSegments *${expr:$i:1}
+      elif [ "$lastChar" == "/" ]; then
+          if [ ${#divisionSegments[@]} -lt 2 ]; then
+            divisionSegments+=(${expr:$i:1})
+          else
+            AppendToLast divisionSegments /${expr:$i:1}
+          fi
+          AppendToLast addSubtractSegments /${expr:$i:1}
+          AppendToLast multiplySegments /${expr:$i:1}
+      else
+          # Bash version 4.3
+          AppendToLast addSubtractSegments ${expr:$i:1}
+          AppendToLast divisionSegments ${expr:$i:1}
+          AppendToLast multiplySegments ${expr:$i:1}
+      fi
+    elif ! [[ ${expr:$i:1} =~ [-\/\+*] ]]; then
+          # Bash version 4.3
+        AppendToLast addSubtractSegments ${expr:$i:1}
+        AppendToLast divisionSegments ${expr:$i:1}
+        AppendToLast multiplySegments ${expr:$i:1}
+    fi
     lastChar=${expr:$i:1}
+    # printf "$lastChar"
+
 
   done
   # printf ${NC}$lastChar
 
-  # for element in ${addSubtractSegments[@]}; do
-  #   echo $element
+  # for element in ${divisionSegments[@]}; do
+  #   echo "$element"
   # done
-  
+
   # Pranteches=0
   # Exponent=0
   # lastChar='none'
   # for (( i=0; i<${#1}; i++ )); do
   #   DoExpressionAnalizerLoop
-    
-    
-    
-
   #   lastChar=${expr:$i:1}
   # done
-
 
   export addSubtractSegments
   export multiplySegments
@@ -260,8 +289,8 @@ DerivateSingle() {
 
 
   # log(a,x)
-  elif [[ $1 =~ ^log\([2-9]+,x\)$ ]]; then
-        prefix=$(echo $1 | grep -oP "[2-9]+")
+  elif [[ $1 =~ ^log\([0-9]+,x\)$ ]]; then
+        prefix=$(echo $1 | grep -oP "[0-9]+")
         echo "1/(x*ln$prefix)"
 
   # lnx
@@ -273,17 +302,22 @@ DerivateSingle() {
         echo "e^x"
 
   # a^x
-  elif [[ $1 =~ [2-9]+\^x$ ]]; then
-        prefix=$(echo $1 | grep -oP "[2-9]+")
+  elif [[ $1 =~ [0-9]+\^x$ ]]; then
+        prefix=$(echo $1 | grep -oP "[0-9]+")
         echo "$prefix^x*ln$prefix"
 
   # constant
   elif [[ $1 =~ ^-?[0-9]+$ ]]; then
         echo 0
 
+  # ax
+  elif [[ $1 =~ ^\-?[0-9]*x$ ]]; then
+        prefix=$(echo $1 | grep -oP "\-?[0-9]" || echo 1)
+        echo $prefix
+
   # invalid entry
   else
-      echo "Not implemented"
+      echo "Not implemented ($1)"
   fi
 }
 
@@ -297,18 +331,21 @@ DerivateComplex(){
 DerivationLoop(){
   # x^x+1
   # 4func(x+1)
-  GetDeriationType $1
-  if [ $type -eq 5 ]; then
+  GetDeriationType "$1"
+  
+  # echo "derivating: $1, type: $type" 
+  if [ $type -eq 4 ]; then
     type="add/sub"
     first=1
     for element in ${addSubtractSegments[@]}; do
       if [ $first -eq 0 ];then 
         printf +
       fi
-      printf "$(DerivationLoop $element)"
+      printf -- "$(DerivationLoop $element)"
       first=0
     done
-  elif [ $type -eq 3 ]; then
+  elif [ $type -eq 5 ]; then
+    printf -- "$(DerivationLoop ${divisionSegments[0]})/$(DerivationLoop ${divisionSegments[1]})"
     type="div"
   elif [ $type -eq 2 ]; then
     type="multiply"
@@ -332,7 +369,6 @@ while getopts ':h' option; do
     ;;
   esac
 done
-
-result=$(DerivationLoop $1)
+result=$(DerivationLoop "$1")
 # result=$(DerivateSingle $1)
-echo "Result: " $result
+echo "Result:  $result"
