@@ -53,11 +53,11 @@ DoExpressionAnalizerLoop() {
       
     fi
   
-      # if [ $Pranteches -eq 0 ]; then #  && [ $Exponent = 0 ]
-      #   printf ${RED}"${expr:$i:1}"
-      # else
-      #   printf ${NC}"${expr:$i:1}"
-      # fi
+      if [ $Pranteches -eq 0 ] && [ $Exponent -eq 0 ]; then #  &&  ]
+        printf ${RED}"${expr:$i:1}"
+      else
+        printf ${NC}"${expr:$i:1}"
+      fi
       # printf ${NC}
 }
 
@@ -167,12 +167,12 @@ GetDeriationType(){
         chainState=1
       else
         chainContent+="${expr:$i:1}"
+        type=$(($type>1 ? $type : 1))
         # printf ${expr:$i:1}
       fi
     fi
     if [ $Pranteches -eq 0 ] && [ $Exponent -eq 0 ]  && [ $chainState -eq 1 ]; then
       chainState=2
-      type=$(($type>1 ? $type : 1))
     fi
 
 
@@ -321,6 +321,11 @@ DerivateSingle() {
   elif [[ $1 =~ [0-9]+\^x$ ]]; then
         prefix=$(echo $1 | grep -oP "[0-9]+")
         echo "$prefix^x*ln$prefix"
+  
+  # x^x
+  # elif [[ $1 =~ [0-9]+\^x$ ]]; then
+  #       prefix=$(echo $1 | grep -oP "[0-9]+")
+  #       echo "$prefix^x*ln$prefix"
 
   # constant
   elif [[ $1 =~ ^-?[0-9]+$ ]]; then
@@ -349,7 +354,7 @@ DerivationLoop(){
   # 4func(x+1)
   GetDeriationType "$1"
   
-  # echo "derivating: $1, type: $type" 
+  echo "\nderivating: $1, type: $type\n" 
   if [ $type -eq 4 ]; then
     type="add/sub"
     first=1
@@ -377,7 +382,7 @@ DerivationLoop(){
     echo $(DerivateSingle $1)
   fi
   # echo $type
-  # echo $chainContent
+  # echo c$chainContent
 
   
   #DerivateSingle $1
