@@ -4,6 +4,24 @@
 RED='\033[0;31m'
 NC='\033[0m'
 
+# UpdateExponentFunctionState() {
+#     if [ $exponentFunctionRecognitionState -eq 0 ] && [[ ${expr:$i:1} =~ [0-9.\-] ]] ; then
+#         $exponentFunctionRecognitionState=1
+#     elif [ $exponentFunctionRecognitionState -eq 1 ] && [[ ${expr:$i:1} =~ [a-z] ]] && [ ${expre:$i:1} != "x" ]; then
+#         $exponentFunctionRecognitionState=2
+#     elif [ $exponentFunctionRecognitionState -eq 2 ] && [ ${expr:$i:1} == "^"]; then
+#         $exponentFunctionRecognitionState=3
+#     elif [ $exponentFunctionRecognitionState -eq 3 ] && ${expr:$i:1} =~ [0-9.\-]]; then
+#         $exponentFunctionRecognitionState=3
+#     fi
+    
+#     if [ $exponentFunctionRecognitionState -gt 6 ] && [ $Pranteches -eq 0 ]; then
+#         $exponentFunctionRecognitionState=10
+#     fi
+
+#     if [[ $expr ]]
+# }
+
 DoExpressionAnalizerLoop() {
     
     if [ "${expr:$i:1}" = "(" ]; then
@@ -71,6 +89,12 @@ AnalizeExpression(){
     
     chainContent=''
     chainState=0
+    
+    
+    exponentFunctionName=()
+    # 0: not started, 1: prefix, 2: name, 3: exponent, 4: Body started, 5: Body done, 10: fucked
+    exponentFunctionRecognitionState=()
+    
     
     lastChar='none'
     #
@@ -152,6 +176,13 @@ AnalizeExpression(){
         
         
     done
+    # echo ${#addSubtractSegments[@]} ${#multiplySegments[@]} ${#divisionSegments[@]}
+    # Force chain and  exponent fucntion
+    if [[ $expr =~ -?[0-9]*(\.[0-9])*(sin|cos|tan|cot|arcsin|arccos|arctan|arccot|sinh|cosh|tanh|coth|arsinh|arcosh|artanh|arcoth|log|ln)\^\-?[0-9]*(\.[0-9]*)?\(.*\) ]]; then # && [ $addSubtractSegments -lt 2 ] && [ $multiplySegments -lt 2] && [ $divisionSegments -lt 2 ]; then
+        # echo MUKODIIK
+        chainContent="5x"
+        type=1
+    fi
     # printf "cc($chainContent)"
     
     # for element in ${multiplySegments[@]}; do
@@ -240,7 +271,10 @@ echo $(DerivateComplex $1)
 
 # 19. Deriválás (2 fő)
 # Írj programot, ami argumentumban megadott kifejezésnek kiszámolja a deriváltját. A program tudja kezelni az alábbi műveleteket, fogalmakat: osztás, szorzás, polinomok, sin, cos, zárójelezés. Pl:
-#      $>deriv sin^2((x^2-3x-5)/4)
+
+#      $>deriv sin^2((x^2-3x-5)/4) = 2sin((x^2-3x-5)/4) * cos((x^2-3x-5)/4) * ((2x-3)*4)/16
+
+#      $>deriv sin^2((x^2-3x-5)/4) = 2sin((x^2-3x-5)/4) * cos((x^2-3x-5)/4) * ((2x-3)*4)/16)
 
 #      $>0.5*sin((x^2-3x-5)/4)*(2x-6)
 

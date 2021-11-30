@@ -2,6 +2,16 @@
 
 ## DEPENDENCY OF DERIVATE.SH
 
+# $1 expression $2 function name
+MatchFunctionRegex(){
+    echo $1 $2
+    # if [[ $1 =~ -?[0-9]*(\.[0-9])*($2)\^\-?[0-9]*(\.[0-9]*)?\(.*\) ]]; then
+    if [[ $1 =~ .* ]]; then
+      match=1
+    else
+      match=0
+    fi
+}
 
 # Extracts params of a -4sin(x) or any other function to prefix, prefix_negative, and inner content
 # $1 should be the expression, $2 the name of the function
@@ -13,6 +23,7 @@ ExtractParams(){
         prefix_negative=1
     fi
     inner_expr=$(echo $1 | grep -oP "^(-?([0-9]*))?$2\(.+\)$" | grep -oP "\((.*)\)")
+    export exponent
     export prefix
     export prefix_negative
     export inner_expr
@@ -37,8 +48,13 @@ DerivateSingle() {
             echo "$(($prefix_negative*$prefix*$exponent))"x^"$(("$exponent"-1))"
         fi
         
-        # SIN
-        elif [[ $1 =~ ^(-?([0-9]*))?sin\(.+\)$ ]]; then
+        
+        match=$(MatchFunctionRegex "$1" sin)
+        echo d$match
+        match="ok"
+        echo matchis$match
+        # SIN -5sin^2(x)
+        elif [ "$match" == "ok" ]; then  #[[ $1 =~ ^(-?([0-9]*))?sin\(.+\)$ ]]; then
         ExtractParams $1 sin
         echo "$(($prefix*$prefix_negative))cos$inner_expr"
         
@@ -118,7 +134,7 @@ DerivateSingle() {
         echo "$(($prefix*$prefix_negative))/1-$inner_expr^2"
         
         
-        # log(a,x)
+        # log(a,x)arccos
         elif [[ $1 =~ ^log\([0-9]+,x\)$ ]]; then
         prefix=$(echo $1 | grep -oP "[0-9]+")
         echo "1/(x*ln$prefix)"
@@ -137,7 +153,7 @@ DerivateSingle() {
         echo "$prefix^x*ln$prefix"
         
         # x^x
-        elif [[ $1 =~ ^-?[0-9]*(.[0-9])?x\^.*$ ]]; then
+        elif [[ $1 =~ ^-?[0-9]*(\.[0-9]*)?x\^.*$ ]]; then
         echo "Ez a kifejezés nem támogatott ($1)"
         
         # constant
@@ -155,5 +171,6 @@ DerivateSingle() {
         
     fi
 }
+# echo $(MatchFunctionRegex "5sin(x)" sin)
 
-echo $(DerivateSingle $1)
+DerivateSingle $1
