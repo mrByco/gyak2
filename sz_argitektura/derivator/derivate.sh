@@ -53,11 +53,11 @@ DoExpressionAnalizerLoop() {
       
     fi
   
-      if [ $Pranteches -eq 0 ] && [ $Exponent -eq 0 ]; then #  &&  ]
-        printf ${RED}"${expr:$i:1}"
-      else
-        printf ${NC}"${expr:$i:1}"
-      fi
+      # if [ $Pranteches -eq 0 ] && [ $Exponent -eq 0 ]; then #  &&  ]
+      #   printf ${RED}"${expr:$i:1}"
+      # else
+      #   printf ${NC}"${expr:$i:1}"
+      # fi
       # printf ${NC}
 }
 
@@ -118,6 +118,18 @@ GetDeriationType(){
       fi
     fi
 
+    if ([ $Pranteches -gt 0 ] || [ $Exponent -gt 0 ])  && [ $chainState -lt 2 ]; then
+      if [ $chainState -eq 0 ]; then
+        chainState=1
+      else
+        chainContent+="${expr:$i:1}"
+        type=$(($type>1 ? $type : 1))
+        # printf ${expr:$i:1}
+      fi
+    fi
+    if [ $Pranteches -eq 0 ] && [ $Exponent -eq 0 ]  && [ $chainState -eq 1 ]; then
+      chainState=2
+    fi
     
     if [ $Pranteches -eq 0 ] && [ $Exponent -eq 0 ]  && ! [[ ${expr:$i:1} =~ [-\/\+\*] ]]; then
       if [ "$lastChar" == "+" ]; then
@@ -160,21 +172,7 @@ GetDeriationType(){
         AppendToLast multiplySegments ${expr:$i:1}
     fi
     lastChar=${expr:$i:1}
-
-
-    if ([ $Pranteches -gt 0 ] || [ $Exponent -gt 0 ])  && [ $chainState -lt 2 ]; then
-      if [ $chainState -eq 0 ]; then
-        chainState=1
-      else
-        chainContent+="${expr:$i:1}"
-        type=$(($type>1 ? $type : 1))
-        # printf ${expr:$i:1}
-      fi
-    fi
-    if [ $Pranteches -eq 0 ] && [ $Exponent -eq 0 ]  && [ $chainState -eq 1 ]; then
-      chainState=2
-    fi
-
+    
 
     # printf "$lastChar"
 
@@ -354,7 +352,7 @@ DerivationLoop(){
   # 4func(x+1)
   GetDeriationType "$1"
   
-  echo "\nderivating: $1, type: $type\n" 
+  # echo "derivating: $1, type: $type" 
   if [ $type -eq 4 ]; then
     type="add/sub"
     first=1
@@ -369,9 +367,15 @@ DerivationLoop(){
     printf -- "$(DerivationLoop ${divisionSegments[0]})/$(DerivationLoop ${divisionSegments[1]})"
     type="div"
   elif [ $type -eq 2 ]; then
+
+    # for i in ${! multiplySegments[@]}; 
+    #   for element in ${multiplySegments[@]};
+    #     printf -- "$(DerivationLoop $element)"
+    #   done
+    # done
     type="multiply"
   elif [ $type -eq 1 ]; then
-    if [ chainContent == "x" ]; then
+    if [[ $chainContent =~ ^-?[0-9]*$ ]] || [[ $chainContent =~ ^x$ ]]; then
       printf -- "$(DerivateSingle $1)"
     else 
       printf -- "$(DerivateSingle $1)*$(DerivationLoop $chainContent)"
