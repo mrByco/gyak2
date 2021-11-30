@@ -80,7 +80,6 @@ AnalizeExpression(){
     for (( i=0; i<${#1}; i++ )); do
         DoExpressionAnalizerLoop
         
-        
         if [ $Exponent = 0 ] && [ $Pranteches = 0 ]; then
             if [[ ${expr:$i:1} = [+] ]]; then
                 type=$(($type>4 ? $type : 4))
@@ -234,8 +233,8 @@ DerivateComplex(){
 echo $(DerivateComplex $1)
 
 # bugs
-#
-#
+#  IMPLEMENT COS^2(X)
+#            ./derivate.sh "x^5x^5"
 #
 # https://users.iit.uni-miskolc.hu/~szkovacs/SzgArch/script_feladatok.html
 

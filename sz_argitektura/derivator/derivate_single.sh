@@ -137,9 +137,8 @@ DerivateSingle() {
         echo "$prefix^x*ln$prefix"
         
         # x^x
-        # elif [[ $1 =~ [0-9]+\^x$ ]]; then
-        #       prefix=$(echo $1 | grep -oP "[0-9]+")
-        #       echo "$prefix^x*ln$prefix"
+        elif [[ $1 =~ ^-?[0-9]*(.[0-9])?x\^.*$ ]]; then
+        echo "Ez a kifejezés nem támogatott ($1)"
         
         # constant
         elif [[ $1 =~ ^-?[0-9]+$ ]]; then
