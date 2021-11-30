@@ -53,7 +53,7 @@ DoExpressionAnalizerLoop() {
       
     fi
   
-      # if [ $Exponent = 0 ] && [ $Pranteches = 0 ]; then
+      # if [ $Pranteches -eq 0 ]; then #  && [ $Exponent = 0 ]
       #   printf ${RED}"${expr:$i:1}"
       # else
       #   printf ${NC}"${expr:$i:1}"
@@ -95,6 +95,7 @@ GetDeriationType(){
   divisionSegments=()
 
   chainContent=''
+  chainState=0
 
   lastChar='none'
 
@@ -119,8 +120,6 @@ GetDeriationType(){
 
     
     if [ $Pranteches -eq 0 ] && [ $Exponent -eq 0 ]  && ! [[ ${expr:$i:1} =~ [-\/\+\*] ]]; then
-    
-      
       if [ "$lastChar" == "+" ]; then
           addSubtractSegments+=(${expr:$i:1})
           
@@ -154,21 +153,37 @@ GetDeriationType(){
           AppendToLast divisionSegments ${expr:$i:1}
           AppendToLast multiplySegments ${expr:$i:1}
       fi
-    elif ! [[ ${expr:$i:1} =~ [-\/\+*] ]]; then
+    elif ! [[ ${expr:$i:1} =~ [-\/\+*] ]] || [ $chainState -eq 1 ]; then
           # Bash version 4.3
         AppendToLast addSubtractSegments ${expr:$i:1}
         AppendToLast divisionSegments ${expr:$i:1}
         AppendToLast multiplySegments ${expr:$i:1}
     fi
     lastChar=${expr:$i:1}
+
+
+    if ([ $Pranteches -gt 0 ] || [ $Exponent -gt 0 ])  && [ $chainState -lt 2 ]; then
+      if [ $chainState -eq 0 ]; then
+        chainState=1
+      else
+        chainContent+="${expr:$i:1}"
+        # printf ${expr:$i:1}
+      fi
+    fi
+    if [ $Pranteches -eq 0 ] && [ $Exponent -eq 0 ]  && [ $chainState -eq 1 ]; then
+      chainState=2
+      type=$(($type>1 ? $type : 1))
+    fi
+
+
     # printf "$lastChar"
 
 
   done
-  # printf ${NC}$lastChar
+  # printf "cc($chainContent)"
 
-  # for element in ${divisionSegments[@]}; do
-  #   echo "$element"
+  # for element in ${addSubtractSegments[@]}; do
+  #   echo " $element"
   # done
 
   # Pranteches=0
@@ -184,6 +199,7 @@ GetDeriationType(){
   export divisionSegments
 
   export chainContent
+  export chainState
 
   export type
 }
@@ -350,12 +366,18 @@ DerivationLoop(){
   elif [ $type -eq 2 ]; then
     type="multiply"
   elif [ $type -eq 1 ]; then
+    if [ chainContent == "x" ]; then
+      printf -- "$(DerivateSingle $1)"
+    else 
+      printf -- "$(DerivateSingle $1)*$(DerivationLoop $chainContent)"
+    fi
     type="chain"
   elif [ $type -eq 0 ]; then
     type="single"
     echo $(DerivateSingle $1)
   fi
   # echo $type
+  # echo $chainContent
 
   
   #DerivateSingle $1
