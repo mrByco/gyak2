@@ -63,7 +63,7 @@ int* generate_permutations(int* array){
     while (current_perm_index < array_lenght){
         current_perm_spread = factorial(array_lenght - 1);
         for (int i = 0; i < permutations_lenght; i++){
-            permutations[i][current_perm_index] = array[]
+            permutations[i][current_perm_index] = array[array_lenght - current_perm_index]
         }
 
         current_perm_index++;
