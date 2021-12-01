@@ -14,7 +14,7 @@ NC='\033[0m'
 #     elif [ $exponentFunctionRecognitionState -eq 3 ] && ${expr:$i:1} =~ [0-9.\-]]; then
 #         $exponentFunctionRecognitionState=3
 #     fi
-    
+
 #     if [ $exponentFunctionRecognitionState -gt 6 ] && [ $Pranteches -eq 0 ]; then
 #         $exponentFunctionRecognitionState=10
 #     fi
@@ -177,10 +177,11 @@ AnalizeExpression(){
         
     done
     # echo ${#addSubtractSegments[@]} ${#multiplySegments[@]} ${#divisionSegments[@]}
+    f="sin|cos|tan|cot|arcsin|arccos|arctan|arccot|sinh|cosh|tanh|coth|arsinh|arcosh|artanh|arcoth|log|ln"
     # Force chain and  exponent fucntion
-    if [[ $expr =~ -?[0-9]*(\.[0-9])*(sin|cos|tan|cot|arcsin|arccos|arctan|arccot|sinh|cosh|tanh|coth|arsinh|arcosh|artanh|arcoth|log|ln)\^\-?[0-9]*(\.[0-9]*)?\(.*\) ]]; then # && [ $addSubtractSegments -lt 2 ] && [ $multiplySegments -lt 2] && [ $divisionSegments -lt 2 ]; then
-        # echo MUKODIIK
-        chainContent="5x"
+    if [[ $expr =~ -?[0-9]*(\.[0-9])*(sin|cos|tan|cot|arcsin|arccos|arctan|arccot|sinh|cosh|tanh|coth|arsinh|arcosh|artanh|arcoth|log|ln)\^\-?[0-9]*(\.[0-9]*)?\(.*\) ]] && [ ${#addSubtractSegments[@]} -lt 2 ] && [ ${#multiplySegments[@]} -lt 2 ] && [ ${#divisionSegments[@]} -lt 2 ]; then
+        chainContent=$(echo $expr | grep -oP "^-?[0-9]*(\.[0-9])*($f)(\^-?[0-9]+\.?([0-9])*)?\(.+\)$" | grep -oP "\((.*)\)")
+        chainContent="${chainContent:1:${#chainContent}-2}"
         type=1
     fi
     # printf "cc($chainContent)"
@@ -255,7 +256,6 @@ DerivateComplex(){
         echo "$(./derivate_single.sh $1)"
     fi
     # echo $type
-    # echo c$chainContent
     
     
     #"$(./derivate_single.sh $1)" $1

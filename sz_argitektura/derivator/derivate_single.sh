@@ -20,8 +20,8 @@ MatchFunctionRegex(){
 # $1 should be the expression, $2 the name of the function
 ExtractParams(){
     firstPart=$(echo $1 | grep -oP "^-?[0-9]*(\.[0-9])*($2)(\^-?[0-9]+\.?([0-9])*)?\(")
-    prefix=$(echo $firstPart | grep -oP "^-?[0-9]*(\.[0-9]+)*($2)" | grep -oP "[\-\.0-9]+")
-    exponent=$(echo $firstPart | grep -oP "\^-?[0-9]+(\.[0-9])*\(" | grep -oP "[\-\.0-9]+")
+    prefix=$(echo $firstPart | grep -oP "^-?[0-9]*(\.[0-9]+)*($2)" | grep -oP "[\-\.0-9]+" || echo 1)
+    exponent=$(echo $firstPart | grep -oP "\^-?[0-9]+(\.[0-9])*\(" | grep -oP "[\-\.0-9]+" || echo 1)
     
     if [ $prefix == "-" ]; then
         prefix="-1"
@@ -62,9 +62,9 @@ DerivateSingle() {
         elif [ $(MatchFunctionRegex "$1" sin) == 1 ]; then  #[[ $1 =~ ^(-?([0-9]*))?sin\(.+\)$ ]]; then
         ExtractParams $1 sin
         if [ $exponent != 1 ]; then 
-          echo "$(Calculate "$prefix*$exponent")$inner_expr" 
+          echo "$(Calculate "$prefix*$exponent")cos$inner_expr" 
           else
-          echo "$(($prefix))cos$inner_expr" 
+          echo "$(Calculate "$prefix*$exponent")cos$inner_expr" 
         fi
         
         # COS
