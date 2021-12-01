@@ -1,0 +1,7 @@
+# depslib dependency file v1.0
+1637698164 source:f:\repos\progalap\random_crash_kaland\main.c
+	<stdio.h>
+	<stdlib.h>
+	<time.h>
+	<math.h>
+
