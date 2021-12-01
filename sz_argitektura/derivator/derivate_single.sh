@@ -64,87 +64,88 @@ DerivateSingle() {
         if [ $exponent != 1 ]; then 
           echo "$(Calculate "$prefix*$exponent")cos$inner_expr" 
           else
-          echo "$(Calculate "$prefix*$exponent")cos$inner_expr" 
+          echo "$(Calculate "$prefix")cos$inner_expr" 
         fi
         
         # COS
-        elif [[ $1 =~ ^(-?([0-9]*))?cos\(.+\)$ ]]; then
+        elif [ $(MatchFunctionRegex "$1" cos) == 1 ]; then
         ExtractParams $1 cos
         echo "$(($prefix*-1))sin$inner_expr"
         
         # TAN
-        elif [[ $1 =~ ^(-?([0-9]*))?tan\(.+\)$ ]]; then
+        elif [ $(MatchFunctionRegex "$1" tan) == 1 ]; then
         ExtractParams $1 tan
-        echo "$(($prefix))/(cos$inner_expr^2)"
+        echo "$(Calculate "$prefix*$exponent")/(cos$inner_expr^2)"
         
         # COT
-        elif [[ $1 =~ ^(-?([0-9]*))?cot\(.+\)$ ]]; then
+        elif [ $(MatchFunctionRegex "$1" cot) == 1 ]; then
         ExtractParams $1 cot
         echo "$(($prefix*-1))/(sin$inner_expr^2)"
         
         # ARCSIN
-        elif [[ $1 =~ ^(-?([0-9]*))?arcsin\(.+\)$ ]]; then
+        elif [ $(MatchFunctionRegex "$1" arcsin) == 1 ]; then
         ExtractParams $1 arcsin
-        echo "$(($prefix))/root(2,1-$inner_expr^2)"
+        echo "$(Calculate "$prefix*$exponent")/root(2,1-$inner_expr^2)"
         
         # ARCCOS
-        elif [[ $1 =~ ^(-?([0-9]*))?arccos\(.+\)$ ]]; then
+        elif [ $(MatchFunctionRegex "$1" arccos) == 1 ]; then
         ExtractParams $1 arccos
         echo "$(($prefix*-1))/root(2,1-$inner_expr^2)"
         
         # ARCTAN
-        elif [[ $1 =~ ^(-?([0-9]*))?arctan\(.+\)$ ]]; then
+        elif [ $(MatchFunctionRegex "$1" arctan) == 1 ]; then
         ExtractParams $1 arctan
-        echo "$(($prefix))/1+$inner_expr^2"
+        echo "$(Calculate "$prefix*$exponent")/1+$inner_expr^2"
         
         # ARCCOT
-        elif [[ $1 =~ ^(-?([0-9]*))?arccot\(.+\)$ ]]; then
+        elif [ $(MatchFunctionRegex "$1" arccot) == 1 ]; then
         ExtractParams $1 arccot
         echo "$(($prefix*-1))/1+$inner_expr^2"
         
         # SINH
-        elif [[ $1 =~ ^(-?([0-9]*))?sinh\(.+\)$ ]]; then
+        elif [ $(MatchFunctionRegex "$1" sinh) == 1 ]; then
         ExtractParams $1 sinh
-        echo "$(($prefix))cosh$inner_expr"
+        echo "$(Calculate "$prefix*$exponent")cosh$inner_expr"
         
         # COSH
-        elif [[ $1 =~ ^(-?([0-9]*))?cosh\(.+\)$ ]]; then
+        elif [ $(MatchFunctionRegex "$1" cosh) == 1 ]; then
         ExtractParams $1 cosh
-        echo "$(($prefix))sinh$inner_expr"
+        echo "$(Calculate "$prefix*$exponent")sinh$inner_expr"
         
         # TANH
-        elif [[ $1 =~ ^(-?([0-9]*))?tanh\(.+\)$ ]]; then
+        elif [ $(MatchFunctionRegex "$1" tanh) == 1 ]; then
         ExtractParams $1 tanh
-        echo "$(($prefix))/(cosh$inner_expr^2)"
+        echo "$(Calculate "$prefix*$exponent")/(cosh$inner_expr^2)"
         
         # COTH
-        elif [[ $1 =~ ^(-?([0-9]*))?coth\(.+\)$ ]]; then
+        elif [ $(MatchFunctionRegex "$1" coth) == 1 ]; then
         ExtractParams $1 coth
         echo "$(($prefix*-1))/(sinh$inner_expr^2)"
         
         # ARSINH
-        elif [[ $1 =~ ^(-?([0-9]*))?arsinh\(.+\)$ ]]; then
+        elif [ $(MatchFunctionRegex "$1" arcsinh) == 1 ]; then
         ExtractParams $1 arsinh
-        echo "$(($prefix))/root(2,($inner_expr^2)+1)"
+        echo "$(Calculate "$prefix*$exponent")/root(2,($inner_expr^2)+1)"
         
         # ARCOSH
-        elif [[ $1 =~ ^(-?([0-9]*))?arcosh\(.+\)$ ]]; then
+        elif [ $(MatchFunctionRegex "$1" arccosh) == 1 ]; then
         ExtractParams $1 arcosh
-        echo "$(($prefix))/root(2,($inner_expr^2)-1)"
+        echo "$(Calculate "$prefix*$exponent")/root(2,($inner_expr^2)-1)"
         
         # ARTANH
-        elif [[ $1 =~ ^(-?([0-9]*))?artanh\(.+\)$ ]]; then
+        elif [ $(MatchFunctionRegex "$1" arctanh) == 1 ]; then
         ExtractParams $1 artanh
-        echo "$(($prefix))/1-$inner_expr^2"
+        echo "$(Calculate "$prefix*$exponent")/1-$inner_expr^2"
         
         # ARCOTH
-        elif [[ $1 =~ ^(-?([0-9]*))?arcoth\(.+\)$ ]]; then
+        elif [ $(MatchFunctionRegex "$1" arccoth) == 1 ]; then
         ExtractParams $1 arcoth
-        echo "$(($prefix))/1-$inner_expr^2"
+        echo "$(Calculate "$prefix*$exponent")/1-$inner_expr^2"
         
         
         # log(a,x)arccos
-        elif [[ $1 =~ ^log\([0-9]+,x\)$ ]]; then
+        elif [[ $(MatchFunctionRegex "$1" log) == 1 ]; then
+        echo (A logaritmus nem támogatott, hibás eredmény)
         prefix=$(echo $1 | grep -oP "[0-9]+")
         echo "1/(x*ln$prefix)"
         
