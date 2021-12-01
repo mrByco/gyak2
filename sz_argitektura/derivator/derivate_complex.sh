@@ -208,24 +208,17 @@ DerivateComplex(){
             first=0
         done
         elif [ $type -eq 5 ]; then
-        for i in ${!multiplySegments[@]}; do
-            if [ $i -ne 0 ]; then
-                printf -- "-"
-            fi
-            for j in ${!multiplySegments[@]}; do
-                if [ $j -ne 0 ] && [ "$j" -lt "$((${#multiplySegments[@]}))" ]; then
-                    printf -- "*"
-                fi
-                if [ $i -eq $j ]; then
-                    printf -- "$(./derivate_complex.sh ${multiplySegments[$j]})"
-                else
-                    printf -- "${multiplySegments[$j]}"
-                fi
-            done
+
+            printf -- "($(./derivate_complex.sh ${divisionSegments[0]})*"
+            printf -- "${divisionSegments[1]}"
+            printf -- ")-("
+            printf -- "${divisionSegments[0]}*"
+            printf -- "$(./derivate_complex.sh ${divisionSegments[1]}))"
             printf -- "/"
+            printf -- "(${divisionSegments[0]})^2"
+        #for i in ${!multiplySegments[@]}; do
             
-        done
-        printf -- "$(DerivateComplex ${divisionSegments[0]})/$(DerivateComplex ${divisionSegments[1]})"
+        #done
         type="div"
         elif [ $type -eq 2 ]; then
         

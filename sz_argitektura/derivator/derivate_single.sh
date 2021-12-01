@@ -56,7 +56,7 @@ DerivateSingle() {
             echo "$(($prefix_negative*$prefix*$exponent))"x
         else
             # shellcheck disable=SC2140
-            echo "$(($prefix_negative*$prefix*$exponent))"x^"$(("$exponent"-1))"
+            echo "$(($prefix_negative*$prefix*$exponent))"x^"$(($exponent-1))"
         fi
         # SIN -5sin^2(x)
         elif [ $(MatchFunctionRegex "$1" sin) == 1 ]; then  #[[ $1 =~ ^(-?([0-9]*))?sin\(.+\)$ ]]; then
@@ -70,7 +70,7 @@ DerivateSingle() {
         # COS
         elif [ $(MatchFunctionRegex "$1" cos) == 1 ]; then
         ExtractParams $1 cos
-        echo "$(($prefix*-1))sin$inner_expr"
+        echo "$( Calculate "$prefix*$exponent*(-1)" )sin$inner_expr"
         
         # TAN
         elif [ $(MatchFunctionRegex "$1" tan) == 1 ]; then
@@ -100,7 +100,7 @@ DerivateSingle() {
         # ARCCOT
         elif [ $(MatchFunctionRegex "$1" arccot) == 1 ]; then
         ExtractParams $1 arccot
-        echo "$(($prefix*-1))/1+$inner_expr^2"
+        echo "$(Calculate $prefix*(-1))/1+$inner_expr^2"
         
         # SINH
         elif [ $(MatchFunctionRegex "$1" sinh) == 1 ]; then
@@ -120,7 +120,7 @@ DerivateSingle() {
         # COTH
         elif [ $(MatchFunctionRegex "$1" coth) == 1 ]; then
         ExtractParams $1 coth
-        echo "$(($prefix*-1))/(sinh$inner_expr^2)"
+        echo "$(Calculate $prefix*(-1))/(sinh$inner_expr^2)"
         
         # ARSINH
         elif [ $(MatchFunctionRegex "$1" arcsinh) == 1 ]; then
@@ -144,10 +144,10 @@ DerivateSingle() {
         
         
         # log(a,x)arccos
-        elif [[ $(MatchFunctionRegex "$1" log) == 1 ]; then
-        echo (A logaritmus nem támogatott, hibás eredmény)
-        prefix=$(echo $1 | grep -oP "[0-9]+")
-        echo "1/(x*ln$prefix)"
+        # elif [ $(MatchFunctionRegex "$1" log) == 1 ]; then
+        # echo (A logaritmus nem támogatott, hibás eredmény)
+        # prefix=$(echo $1 | grep -oP "[0-9]+")
+        # echo "1/(x*ln$prefix)"
         
         # lnx
         elif [[ $1 =~ lnx ]]; then
