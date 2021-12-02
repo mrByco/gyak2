@@ -219,7 +219,7 @@ DerivateComplex(){
         #for i in ${!multiplySegments[@]}; do
             
         #done
-        type="div"
+        type="div"cos
         elif [ $type -eq 2 ]; then
         
         for i in ${!multiplySegments[@]}; do
