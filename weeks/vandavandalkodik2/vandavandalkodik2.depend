@@ -1,0 +1,6 @@
+# depslib dependency file v1.0
+1637756948 source:c:\users\matyi\documents\repos\gyok2\weeks\vandavandalkodik2\main.c
+	<stdio.h>
+	<stdlib.h>
+	<time.h>
+

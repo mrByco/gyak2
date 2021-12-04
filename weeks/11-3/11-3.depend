@@ -1,0 +1,5 @@
+# depslib dependency file v1.0
+1637405817 source:c:\users\matyi\documents\repos\gyok2\weeks\11-3\main.c
+	<stdio.h>
+	<stdlib.h>
+

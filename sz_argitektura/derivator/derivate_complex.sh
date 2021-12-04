@@ -4,24 +4,6 @@
 RED='\033[0;31m'
 NC='\033[0m'
 
-# UpdateExponentFunctionState() {
-#     if [ $exponentFunctionRecognitionState -eq 0 ] && [[ ${expr:$i:1} =~ [0-9.\-] ]] ; then
-#         $exponentFunctionRecognitionState=1
-#     elif [ $exponentFunctionRecognitionState -eq 1 ] && [[ ${expr:$i:1} =~ [a-z] ]] && [ ${expre:$i:1} != "x" ]; then
-#         $exponentFunctionRecognitionState=2
-#     elif [ $exponentFunctionRecognitionState -eq 2 ] && [ ${expr:$i:1} == "^"]; then
-#         $exponentFunctionRecognitionState=3
-#     elif [ $exponentFunctionRecognitionState -eq 3 ] && ${expr:$i:1} =~ [0-9.\-]]; then
-#         $exponentFunctionRecognitionState=3
-#     fi
-
-#     if [ $exponentFunctionRecognitionState -gt 6 ] && [ $Pranteches -eq 0 ]; then
-#         $exponentFunctionRecognitionState=10
-#     fi
-
-#     if [[ $expr ]]
-# }
-
 DoExpressionAnalizerLoop() {
     
     if [ "${expr:$i:1}" = "(" ]; then
@@ -83,7 +65,7 @@ AnalizeExpression(){
     Pranteches=0
     Exponent=0
     
-    addSubtractSegments=()
+    addSubtractSegments=() # x^4 x^6^5^(x + 2) -cos(x+x^56)
     multiplySegments=()
     divisionSegments=()
     
@@ -92,7 +74,7 @@ AnalizeExpression(){
     
     
     exponentFunctionName=()
-    # 0: not started, 1: prefix, 2: name, 3: exponent, 4: Body started, 5: Body done, 10: fucked
+    # 0: not started, 1: prefix, 2: name, 3: exponent, 4: Body started, 5: Body done, 10: fucked x
     exponentFunctionRecognitionState=()
     
     
@@ -116,6 +98,7 @@ AnalizeExpression(){
             fi
         fi
         
+        # Chain
         if ([ $Pranteches -gt 0 ] || [ $Exponent -gt 0 ])  && [ $chainState -lt 2 ]; then
             if [ $chainState -eq 0 ]; then
                 chainState=1
@@ -129,6 +112,7 @@ AnalizeExpression(){
             chainState=2
         fi
         
+        # Segments
         if [ $Pranteches -eq 0 ] && [ $Exponent -eq 0 ]  && ! [[ ${expr:$i:1} =~ [-\/\+\*] ]]; then
             if [ "$lastChar" == "+" ]; then
                 addSubtractSegments+=(${expr:$i:1})
@@ -224,8 +208,18 @@ DerivateComplex(){
             first=0
         done
         elif [ $type -eq 5 ]; then
-        printf -- "$(DerivateComplex ${divisionSegments[0]})/$(DerivateComplex ${divisionSegments[1]})"
-        type="div"
+
+            printf -- "($(./derivate_complex.sh ${divisionSegments[0]})*"
+            printf -- "${divisionSegments[1]}"
+            printf -- ")-("
+            printf -- "${divisionSegments[0]}*"
+            printf -- "$(./derivate_complex.sh ${divisionSegments[1]}))"
+            printf -- "/"
+            printf -- "(${divisionSegments[0]})^2"
+        #for i in ${!multiplySegments[@]}; do
+            
+        #done
+        type="div"cos
         elif [ $type -eq 2 ]; then
         
         for i in ${!multiplySegments[@]}; do
