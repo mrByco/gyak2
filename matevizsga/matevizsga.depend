@@ -1,0 +1,8 @@
+# depslib dependency file v1.0
+1638532356 source:f:\repos\progalap\matevizsga\main.c
+	<stdio.h>
+	"stdlib.h"
+	"time.h"
+	"math.h"
+	"string.h"
+

@@ -1,0 +1,8 @@
+# depslib dependency file v1.0
+1638569677 source:f:\repos\progalap\vizsgateszta\main.c
+	<stdio.h>
+	<stdlib.h>
+	<time.h>
+	<math.h>
+	<string.h>
+
