@@ -1,0 +1,6 @@
+# depslib dependency file v1.0
+1638616375 source:f:\repos\progalap\altetaverseny\main.c
+	<stdio.h>
+	<stdlib.h>
+	<time.h>
+
