@@ -1,0 +1,5 @@
+# depslib dependency file v1.0
+1638718088 source:f:\repos\progalap\zhproba\main.c
+	<stdio.h>
+	<stdlib.h>
+

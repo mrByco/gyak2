@@ -59,11 +59,8 @@ int main() {
     for (int i = 0; i < 1; i++){
         printf("%.2f", common[i]);
     }
-
-
     return 0;
 }
-
 
 void initRandom() {
     srand(time(NULL));
@@ -150,7 +147,6 @@ int max_sort(float* array, int length) {
     }
 }
 
-
 float* get_common_jumps(float* jumpsA, float* jumpsB, int length) {
     int common_count = 0;
     float common[length];
@@ -177,4 +173,3 @@ float* get_common_jumps(float* jumpsA, float* jumpsB, int length) {
         result[i] = common[i];
     }
     return result;
-}

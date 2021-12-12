@@ -1,0 +1,11 @@
+# depslib dependency file v1.0
+1638699188 source:f:\repos\progalap\binhex\main.c
+	<stdio.h>
+	<stdlib.h>
+	<time.h>
+	"hello/hello.h"
+
+1638699139 source:f:\repos\progalap\binhex\hello\hello.c
+
+1638699324 f:\repos\progalap\binhex\hello\hello.h
+
