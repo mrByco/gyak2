@@ -1,0 +1,6 @@
+# depslib dependency file v1.0
+1639319774 source:c:\users\matyi\documents\repos\gyok2\vizsgagyakorlo\chararray\main.c
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+
