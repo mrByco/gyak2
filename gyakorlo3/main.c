@@ -40,8 +40,6 @@ int main()
     printf("%-10d\t\t%-5d\n", 54, 2);
     printf("%-10d\t\t%-5d\n", 54654654, 245);
 
-
-
     return 0;
 }
 

@@ -15,16 +15,14 @@ int main() {
     return 0;
 }
 
-
 void inputBufferHacking(){
     char c;
     do {
         printf("\nAdj meg egy karaktert: ");
-        scanf("%c", &c); /* jó megoldás: scanf(" %c", &c); */
+        scanf("%c", &c); /* jï¿½ megoldï¿½s: scanf(" %c", &c); */
         printf("%c", c);
     } while (c!='z');
 }
-
 
 void myInputBufferHacking(){
     int a, b, c, d;
